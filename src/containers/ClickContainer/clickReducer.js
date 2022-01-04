@@ -3,36 +3,51 @@ import { INCREMENT, DECREMENT } from './constant';
 
 export const initialState = {
   counter: 0,
-  step: 1, 
-  min : 0,
-  max : 9999999,
+  step: 1,
+  min: 0,
+  max: 99999,
 };
 
 export default function homeContainerReducer(state = initialState, action) {
-//export default function clickContainerReducer(state = initialState, action) {
-  let result = state.counter;
 
   switch (action.type) {
     case INCREMENT:
-    
-     if (state.counter< state.max)
-      result+= state.step;
-     
+
+      state = Increment(state);
 
       return {
         ...state,
-         counter:  result, 
-      };   
-      case DECREMENT:
-        if (state.counter> state.min)
-          result-= state.step;
-         
-    
-        return {
-          ...state,
-           counter: result,
-        };   
+        counter: state.counter,
+      };
+    case DECREMENT:
+      state = Increment(state, false);
+
+      return {
+        ...state,
+        counter: state.counter,
+      };
     default:
       return state;
   }
+}
+
+/**
+ * ********************************************************
+ * @param {*} state :  initialState
+ * @param {*} action True = + false = - 
+ * @returns state
+ */
+export function Increment(state, action = true) {
+
+  let incrStep = (action) ? state.step : state.step * -1;
+
+  if (state.counter + incrStep > state.max)
+    state.counter = state.max;
+  else if (state.counter + incrStep <= state.min)
+    state.counter = state.min;
+  else
+    state.counter += incrStep;
+
+
+  return state;
 }
